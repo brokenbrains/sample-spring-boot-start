@@ -1,0 +1,55 @@
+import java.time.Duration
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "com.avast.gradle:gradle-docker-compose-plugin:0.14.9"
+    }
+}
+
+apply plugin: 'docker-compose'
+
+subprojects {
+    apply plugin: 'java'
+    targetCompatibility = 1.8
+    sourceCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        implementation 'commons-lang:commons-lang:2.6'
+        testImplementation 'junit:junit:4.12'
+        testImplementation 'org.mockito:mockito-core:2.23.0'
+    }
+}
+
+dockerCompose {
+    projectName = null
+    dockerComposeStopTimeout = Duration.ofSeconds(1)
+    waitAfterTcpProbeFailure = Duration.ofSeconds(15)
+    waitAfterHealthyStateProbeFailure = Duration.ofSeconds(15)
+    removeContainers = false // default is true
+    removeVolumes = false // default is true
+}
+
+composeBuild.dependsOn("assemble")
+subprojects.each {
+    if (it.name.endsWith("-service")) {
+        composeUp.dependsOn(":" + it.name + ":assemble")
+    }
+}
+
+task serviceUp(type: GradleBuild) {
+    tasks = ["composeUp"]
+}
+
+task serviceDown(type: GradleBuild) {
+    tasks = ["composeDown"]
+}

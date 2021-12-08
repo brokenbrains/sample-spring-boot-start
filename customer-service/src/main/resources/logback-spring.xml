@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+
+    <springProfile name="dev">
+        <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+		
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+		<logger name="org.springframework" level="INFO"/>
+		<logger name="org.springframework.orm.jpa" level="DEBUG"/> 
+		<logger name="org.hibernate.SQL" level="DEBUG"/>
+        <logger name="io.brokenbrains.sample" level="DEBUG"/>
+	
+    </springProfile>
+
+	<springProfile name="dev">
+
+        <appender name="FILE-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>/tmp/logs/penril-wallet-debug.log</file>
+
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>/tmp/logs/archived/penril-wallet-debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <!-- each archived file, size max 10MB -->
+                <maxFileSize>10MB</maxFileSize>
+                <!-- total size of all archive files, if total size > 20GB, it will delete old archived file -->
+                <totalSizeCap>20GB</totalSizeCap>
+                <!-- 60 days to keep -->
+                <maxHistory>60</maxHistory>
+            </rollingPolicy>
+
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5level][%logger{26}] %msg%n</pattern>
+            </encoder>
+        </appender>
+
+		<appender name="TXN-FILE-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>/tmp/logs/penril-wallet-transaction.log</file>
+
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>/tmp/logs/archived/penril-wallet-transaction.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <!-- each archived file, size max 10MB -->
+                <maxFileSize>10MB</maxFileSize>
+                <!-- total size of all archive files, if total size > 20GB, it will delete old archived file -->
+                <totalSizeCap>20GB</totalSizeCap>
+                <!-- 60 days to keep -->
+                <maxHistory>365</maxHistory>
+            </rollingPolicy>
+
+            <encoder>
+                <pattern>%d{yyyyMMddHHmmss},%msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <root level="ERROR">
+            <appender-ref ref="FILE-ROLLING"/>
+        </root>
+		
+		<logger name="TransactionLog" additivity="false" level="INFO">
+			<appender-ref ref="TXN-FILE-ROLLING"/>
+		</logger>
+
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="org.springframework.orm.jpa" level="DEBUG"/>
+        <logger name="org.hibernate.SQL" level="DEBUG"/>
+        <logger name="io.eventuate.activity" level="DEBUG"/>
+        <logger name="io.eventuate.tram" level="TRACE"/>
+        <logger name="net.penril.wallet" level="DEBUG"/>
+
+    </springProfile>
+
+    <springProfile name="prod">
+
+        <appender name="FILE-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>/var/log/upass/ups-debug.log</file>
+
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>/var/log/upass/archived/ups-debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <!-- each archived file, size max 10MB -->
+                <maxFileSize>10MB</maxFileSize>
+                <!-- total size of all archive files, if total size > 20GB, it will delete old archived file -->
+                <totalSizeCap>20GB</totalSizeCap>
+                <!-- 60 days to keep -->
+                <maxHistory>60</maxHistory>
+            </rollingPolicy>
+
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5level][%logger{26}] %msg%n</pattern>
+            </encoder>
+        </appender>
+
+		<appender name="TXN-FILE-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>/var/log/penril-wallet/transaction.log</file>
+
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>/var/log/penril-wallet/archived/transaction.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <!-- each archived file, size max 10MB -->
+                <maxFileSize>10MB</maxFileSize>
+                <!-- total size of all archive files, if total size > 20GB, it will delete old archived file -->
+                <totalSizeCap>20GB</totalSizeCap>
+                <!-- 60 days to keep -->
+                <maxHistory>365</maxHistory>
+            </rollingPolicy>
+
+            <encoder>
+                <pattern>%d{yyyyMMddHHmmss},%msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <root level="ERROR">
+            <appender-ref ref="FILE-ROLLING"/>
+        </root>
+
+		<logger name="TransactionLog" additivity="false" level="INFO">
+			<appender-ref ref="TXN-FILE-ROLLING"/>
+		</logger>
+
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="org.springframework.orm.jpa" level="DEBUG"/>
+        <logger name="org.hibernate.SQL" level="DEBUG"/>
+        <logger name="io.eventuate.activity" level="DEBUG"/>
+        <logger name="io.eventuate.tram" level="TRACE"/>
+        <logger name="net.penril.wallet" level="DEBUG"/>
+
+    </springProfile>
+
+
+</configuration>

@@ -1,0 +1,27 @@
+project.apply(plugin: 'org.springframework.boot')
+project.apply(plugin: "io.spring.dependency-management")
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
+    }
+}
+
+dependencies {
+    implementation project(":common-domain")
+    implementation project(":account-service-api-messaging")
+    implementation project(":account-service-api-web")
+
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
+    implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+    implementation "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
+    runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc'
+    testImplementation "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+    implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.5.9'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.5.9'
+    implementation 'com.squareup.okhttp3:okhttp:3.14.6'
+
+}

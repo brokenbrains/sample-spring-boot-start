@@ -1,0 +1,8 @@
+include 'common-domain'
+include 'customer-service-api-messaging'
+include 'customer-service-api-web'
+include 'customer-service'
+include 'account-service-api-messaging'
+include 'account-service-api-web'
+include 'account-service'
+
